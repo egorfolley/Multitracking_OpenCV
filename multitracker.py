@@ -6,11 +6,10 @@ path = os.getcwd()
 # creating MultiTracker object
 tracker = cv2.MultiTracker_create()
 
-# select video
-vid = cv2.VideoCapture(path + '/video/Circle_illusion.mp4')
-#vid = cv2.VideoCapture(path + '/video/vids_1.mp4')
+# add here video 
+vid = cv2.VideoCapture(path + '/video/Your_video_format_mp4')
 
-# start 1st frame to choose objects
+# start 1st frame to draw the boundaries for the objects
 working, frame = vid.read()
 
 # select objects to follow
@@ -33,10 +32,12 @@ while (True):
 for bbox in bboxes:
     # adding tracking algorithms
 
+    # uncomment to use CSRT and comment Boosting
+
     # CSRT - usefull, but slow when 2+ objects
     # tracker.add(cv2.TrackerCSRT_create(), frame, bbox)
 
-    # BOOSTING - goes perfrct
+    # BOOSTING - goes perfect almost all the time, but too fast
     tracker.add(cv2.TrackerBoosting_create(), frame, bbox)
 
 # videostreaming and tracking objects
@@ -53,7 +54,6 @@ while (vid.isOpened()):
     working, boxes = tracker.update(frame)
     # drawing objects
     for i, newbox in enumerate(boxes):
-        # choose coordinates
         p1 = (int(newbox[0]), int(newbox[1]))
         p2 = (int(newbox[0] + newbox[2]), int(newbox[1] + newbox[3]))
         # set rectangle to the object
